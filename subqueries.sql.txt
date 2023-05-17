@@ -1,0 +1,32 @@
+1.
+select count(*) from film
+where length > (select avg(length) from film);
+
+
+2.
+select count(*) from film
+where rental_rate = (select max(rental_rate) from film);
+
+
+3.
+(select * from film 
+where rental_rate = (select min(rental_rate) from film))
+INTERSECT
+(select * from film 
+where replacement_cost = (select min(replacement_cost) from film))
+;
+
+OR 
+
+select * from film 
+where rental_rate = (select min(rental_rate) from film) and replacement_cost = (select min(replacement_cost) from film);
+
+4.
+
+select * from customer
+INNER JOIN (select count(*) A, customer_id from payment
+group by customer_id
+) count_purchases
+ON customer.customer_id = count_purchases.customer_id
+order by A DESC
+LIMIT 3
